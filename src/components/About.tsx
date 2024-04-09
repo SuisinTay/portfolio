@@ -17,14 +17,17 @@ const About = () => {
         </div>
         <div className="max-w-[1000px] w-full grid sm:grid-cols-2 gap-8 px-4">
           <div className="sm:text-right text-4xl font-bold">
-            <p>Hello, I'm Sui Sin</p>
+            <p>Hello, I'm Sui Sin!</p>
           </div>
           <div>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
-              similique culpa esse, eaque eius earum. Ea nulla magni alias
-              ratione provident fuga quis, ipsum voluptatum iusto molestias.
-              Magni, id! Rerum.
+              Hailing from the charming town of Malacca, I proudly wield a
+              Software Engineering Degree from Taylor's University. With two
+              years of frontend wizardry under my belt, I'm on a mission to
+              sprinkle magic across the webosphere! From crafting captivating
+              websites to conjuring up delightful user experiences, I thrive on
+              pushing boundaries and turning pixels into pure joy. Let's embark
+              on an adventure together and create some digital wonders! 🚀✨
             </p>
           </div>
         </div>
