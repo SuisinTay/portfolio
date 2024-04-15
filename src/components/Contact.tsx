@@ -14,7 +14,7 @@ const Contact = () => {
         onSubmit={() => {}}
         validationSchema={formValidationSchema}
       >
-        {({ isValid }) => (
+        {({ isValid, isSubmitting }) => (
           <Form
             method="POST"
             action="https://getform.io/f/jbwxwmqa"
@@ -53,7 +53,7 @@ const Contact = () => {
             />
 
             <button
-              disabled={!isValid}
+              disabled={!isValid || isSubmitting}
               type="submit"
               className="text-white border-2 hover:bg-pink-600 hover:border-pink-600 px-4 py-3 my-8 mx-auto flex items-center disabled:bg-slate-400 disabled:border-slate-100"
             >
