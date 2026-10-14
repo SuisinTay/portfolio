@@ -1,22 +1,7 @@
 export const routesConfig = [
-  {
-    to: "home",
-    title: "Home",
-  },
-  {
-    to: "about",
-    title: "About",
-  },
-  {
-    to: "skills",
-    title: "Skills",
-  },
-  {
-    to: "work",
-    title: "Work",
-  },
-  {
-    to: "contact",
-    title: "Contact",
-  },
+  { to: "about", title: "About" },
+  { to: "work", title: "Work" },
+  { to: "experience", title: "Experience" },
+  { to: "skills", title: "Skills" },
+  { to: "contact", title: "Contact" },
 ];

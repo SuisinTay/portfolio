@@ -1,33 +1,52 @@
-import JavaScript from "../assets/javascript.png";
-import React from "../assets/react.png";
-import Github from "../assets/github.png";
-import CSS from "../assets/css.png";
-import HTML from "../assets/html.png";
-import Node from "../assets/node.png";
+import {
+  siDocker,
+  siExpress,
+  siGit,
+  siGnubash,
+  siGo,
+  siHtml5,
+  siJest,
+  siMobx,
+  siMongodb,
+  siN8n,
+  siNextdotjs,
+  siNodedotjs,
+  siPostman,
+  siReact,
+  siSass,
+  siTypescript,
+  siVuedotjs,
+  siCss,
+} from "simple-icons";
 
-export const skillsConfig = [
-  {
-    image: JavaScript,
-    skills: "JavaScript",
-  },
-  {
-    image: HTML,
-    skills: "HTML",
-  },
-  {
-    image: CSS,
-    skills: "CSS",
-  },
-  {
-    image: Github,
-    skills: "Github",
-  },
-  {
-    image: React,
-    skills: "React",
-  },
-  {
-    image: Node,
-    skills: "Node",
-  },
-];
+export type Skill = { title: string; path: string; hex: string };
+
+const pick = (i: { title: string; path: string; hex: string }): Skill => ({
+  title: i.title,
+  path: i.path,
+  hex: i.hex,
+});
+
+export const skillsRowOne: Skill[] = [
+  siReact,
+  siNextdotjs,
+  siTypescript,
+  siMobx,
+  siSass,
+  siHtml5,
+  siCss,
+  siVuedotjs,
+].map(pick);
+
+export const skillsRowTwo: Skill[] = [
+  siGo,
+  siNodedotjs,
+  siExpress,
+  siMongodb,
+  siDocker,
+  siGnubash,
+  siN8n,
+  siGit,
+  siJest,
+  siPostman,
+].map(pick);

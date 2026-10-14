@@ -1,38 +1,54 @@
-import { Element } from "react-scroll";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import type { MotionValue } from "motion/react";
+
+const statement =
+  "I've spent four years shipping production interfaces and was recently trusted to lead a platform migration. I care most about the unglamorous parts: performance, accessibility, release tooling, and the handoff between design and backend.";
+
+const Word = ({
+  word,
+  range,
+  progress,
+}: {
+  word: string;
+  range: [number, number];
+  progress: MotionValue<number>;
+}) => {
+  const opacity = useTransform(progress, range, [0.2, 1]);
+  return (
+    <motion.span style={{ opacity }} className="mr-[0.25em] inline-block">
+      {word}
+    </motion.span>
+  );
+};
 
 const About = () => {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.85", "end 0.6"],
+  });
+  const words = statement.split(" ");
+
   return (
-    <Element
-      name="about"
-      className="w-full h-screen bg-[#0a192f] text-gray-300"
-    >
-      <div className="flex flex-col justify-center items-center w-full h-full">
-        <div className="max-w-[1000px] w-full grid grid-cols-2 gap-8">
-          <div className="sm:text-right pb-8 pl-4">
-            <p className="text-4xl font-bold inline border-b-4 border-pink-600">
-              About
-            </p>
-          </div>
-          <div></div>
-        </div>
-        <div className="max-w-[1000px] w-full grid sm:grid-cols-2 gap-8 px-4">
-          <div className="sm:text-right text-4xl font-bold">
-            <p>Hello, I'm Sui Sin!</p>
-          </div>
-          <div>
-            <p>
-              Hailing from the charming town of Malacca, I proudly wield a
-              Software Engineering Degree from Taylor's University. With two
-              years of frontend wizardry under my belt, I'm on a mission to
-              sprinkle magic across the webosphere! From crafting captivating
-              websites to conjuring up delightful user experiences, I thrive on
-              pushing boundaries and turning pixels into pure joy. Let's embark
-              on an adventure together and create some digital wonders! 🚀✨
-            </p>
-          </div>
-        </div>
+    <section id="about" className="py-16 md:py-24">
+      <div className="container-page grid gap-8 md:grid-cols-12">
+        <h2 className="font-serif text-4xl leading-[0.95] md:sticky md:top-24 md:self-start md:col-span-3">The short <em className="text-accent">version</em></h2>
+        <p
+          ref={ref}
+          className="font-serif text-4xl leading-[1.1] sm:text-5xl md:col-span-9 md:text-6xl"
+        >
+          {words.map((w, i) => (
+            <Word
+              key={i}
+              word={w}
+              progress={scrollYProgress}
+              range={[i / words.length, (i + 1) / words.length]}
+            />
+          ))}
+        </p>
       </div>
-    </Element>
+    </section>
   );
 };
 

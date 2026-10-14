@@ -1,74 +1,180 @@
-import { useState } from "react";
-import { FaBars, FaTimes, FaGithub, FaLinkedin } from "react-icons/fa";
-import { HiOutlineMail } from "react-icons/hi";
-import { BsFillPersonLinesFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
 import { routesConfig } from "../constants/routesConfig";
-import RouteLink from "../containers/RouteLink";
+import { siteConfig } from "../constants/siteConfig";
+import { useActiveSection } from "../hooks/useActiveSection";
+import { scrollToId } from "../lib/scroll";
+
+const ids = routesConfig.map((r) => r.to);
+const NAV_HEIGHT = 56;
 
 const Navbar = () => {
-  const [burgerOpen, setBurgerOpen] = useState(false);
-  const handleClick = () => setBurgerOpen((prev) => !prev);
+  const [open, setOpen] = useState(false);
+  const [onAccent, setOnAccent] = useState(false);
+  const active = useActiveSection(ids);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // The Contact section is a full-bleed accent block; match the bar to it.
+  useEffect(() => {
+    const check = () => {
+      const el = document.getElementById("contact");
+      setOnAccent(!!el && el.getBoundingClientRect().top <= NAV_HEIGHT / 2);
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    return () => {
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, []);
+
+  const go = (id: string) => {
+    setOpen(false);
+    scrollToId(id);
+  };
+
+  const idle = onAccent ? "text-base/65 hover:text-base" : "text-muted hover:text-ink";
+  const current = onAccent ? "text-base" : "text-ink";
+  const bar = onAccent ? "bg-base" : "bg-ink";
+
   return (
-    <div className="fixed w-full h-[80px] flex justify-between items-center px-4 bg-[#0a192f] text-gray-300">
-      <div>Sui Sin</div>
-      <ul className="hidden md:flex">
-        {routesConfig.map((route) => (
-          <li>
-            <RouteLink {...route} />
-          </li>
-        ))}
-      </ul>
+    <header
+      className={`fixed inset-x-0 top-0 z-nav border-b backdrop-blur-md transition-colors duration-300 ${
+        onAccent
+          ? "border-base/20 bg-accent/90 text-base"
+          : "border-line bg-base/80 text-ink"
+      }`}
+    >
+      <div className="container-page">
+        <nav
+          aria-label="Primary"
+          className="flex items-center justify-between"
+          style={{ height: NAV_HEIGHT }}
+        >
+          <a
+            href="#top"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToId("top");
+            }}
+            className="font-serif text-2xl leading-none"
+          >
+            {siteConfig.shortName}
+          </a>
 
-      {/* Hamburger */}
-      <div onClick={handleClick} className="md:hidden z-10 cursor-pointer">
-        {burgerOpen ? <FaTimes /> : <FaBars />}
+          <ul className="hidden items-center gap-1 md:flex">
+            {routesConfig.map(({ to, title }) => (
+              <li key={to}>
+                <a
+                  href={`#${to}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    go(to);
+                  }}
+                  aria-current={active === to ? "true" : undefined}
+                  className={`rounded-lg px-3 py-2 text-sm transition-colors ${
+                    active === to ? current : idle
+                  }`}
+                >
+                  {title}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-2">
+            <a
+              href={siteConfig.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`hidden rounded-md border px-3 py-1.5 text-sm transition-colors sm:inline-block ${
+                onAccent
+                  ? "border-base/40 hover:bg-base hover:text-accent"
+                  : "border-line hover:border-accent hover:text-accent"
+              }`}
+            >
+              Resume
+            </a>
+            <button
+              type="button"
+              className="grid h-10 w-10 place-items-center rounded-lg md:hidden"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={() => setOpen((o) => !o)}
+            >
+              <span className="relative block h-3 w-5">
+                <span
+                  className={`absolute left-0 h-px w-5 transition-transform ${bar} ${
+                    open ? "top-1.5 rotate-45" : "top-0"
+                  }`}
+                />
+                <span
+                  className={`absolute left-0 h-px w-5 transition-transform ${bar} ${
+                    open ? "top-1.5 -rotate-45" : "top-3"
+                  }`}
+                />
+              </span>
+            </button>
+          </div>
+        </nav>
       </div>
 
-      <ul
-        className={
-          burgerOpen
-            ? "absolute top-0 left-0 w-full h-screen bg-[#0a192f] flex flex-col justify-center items-center"
-            : "hidden"
-        }
-      >
-        {routesConfig.map((route) => (
-          <li className="py-6 text-4xl">
-            <RouteLink onClick={handleClick} {...route} />
-          </li>
-        ))}
-      </ul>
+      <motion.span
+        aria-hidden="true"
+        style={{ scaleX: progress }}
+        className={`absolute -bottom-px left-0 right-0 h-px origin-left ${
+          onAccent ? "bg-base" : "bg-accent"
+        }`}
+      />
 
-      <div className="hidden lg:flex fixed flex-col top-[35%] left-0">
-        <ul>
-          <li className="w-[160px] h-[60px] flex justify-between items-center ml-[-100px] hover:ml-[-10px] duration-300 bg-blue-600">
-            <a
-              className="flex justify-between items-center w-full text-gray-300"
-              href="https://www.linkedin.com/in/tay-suisin-732253172?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
-            >
-              LinkedIn <FaLinkedin size={30} />
-            </a>
-          </li>
-          <li className="w-[160px] h-[60px] flex justify-between items-center ml-[-100px] hover:ml-[-10px] duration-300 bg-black">
-            <a
-              className="flex justify-between items-center w-full text-gray-300"
-              href="https://github.com/SuisinTay"
-            >
-              Github <FaGithub size={30} />
-            </a>
-          </li>
-          <li className="w-[160px] h-[60px] flex justify-between items-center ml-[-100px] hover:ml-[-10px] duration-300 bg-[#6fc2b0]">
-            <a className="flex justify-between items-center w-full text-gray-300">
-              Email <HiOutlineMail size={30} />
-            </a>
-          </li>
-          <li className="w-[160px] h-[60px] flex justify-between items-center ml-[-100px] hover:ml-[-10px] duration-300 bg-[#565f69]">
-            <a className="flex justify-between items-center w-full text-gray-300">
-              Resume <BsFillPersonLinesFill size={30} />
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+      {open && (
+        <div
+          id="mobile-menu"
+          className={`container-page border-t py-3 md:hidden ${
+            onAccent ? "border-base/20" : "border-line"
+          }`}
+        >
+          <ul>
+            {routesConfig.map(({ to, title }) => (
+              <li key={to}>
+                <a
+                  href={`#${to}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    go(to);
+                  }}
+                  className="block rounded-lg py-3 text-lg"
+                >
+                  {title}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a
+                href={siteConfig.resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`block rounded-lg py-3 text-lg ${
+                  onAccent ? "" : "text-accent"
+                }`}
+              >
+                Resume
+              </a>
+            </li>
+          </ul>
+        </div>
+      )}
+    </header>
   );
 };
 

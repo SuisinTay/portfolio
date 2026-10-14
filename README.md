@@ -1,30 +1,27 @@
-# My Portfolio created using Vite + React + tailwind.css
+# Tay Sui Sin — portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio built with Vite, React 18, TypeScript and Tailwind CSS 3.
+Motion by [Motion](https://motion.dev) and smooth scrolling by [Lenis](https://lenis.darkroom.engineering).
 
-Currently, two official plugins are available:
+## Develop
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run lint
+npm run build    # type-check + production build into dist/
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Edit content
+
+All copy lives in `src/constants/`:
+
+| File | Controls |
+| --- | --- |
+| `siteConfig.ts` | name, email, social links, resume path, form endpoint |
+| `workConfig.ts` | selected work entries |
+| `experienceConfig.ts` | experience and education |
+| `skillsConfig.ts` | toolbox groups |
+
+Design tokens (colour, type scale, container width) are in `tailwind.config.js`.
+The resume is served from `public/resume.pdf`.
