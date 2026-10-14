@@ -20,12 +20,17 @@ export const startSmoothScroll = () => {
   };
 };
 
+// Height of the fixed nav bar; sections land flush beneath it.
+const NAV_OFFSET = 56;
+
 export const scrollToId = (id: string) => {
   const el = document.getElementById(id);
   if (!el) return;
-  // The full-bleed contact block should sit flush under the bar.
-  const offset = id === "contact" ? 0 : -72;
-  if (lenis) lenis.scrollTo(el, { offset });
-  else el.scrollIntoView({ behavior: "auto", block: "start" });
+  if (lenis) {
+    lenis.scrollTo(el, { offset: -NAV_OFFSET });
+  } else {
+    const top = el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+    window.scrollTo({ top, behavior: "auto" });
+  }
   history.replaceState(null, "", `#${id}`);
 };

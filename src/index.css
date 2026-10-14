@@ -9,7 +9,6 @@
 
 @layer base {
   html {
-    scroll-padding-top: 5rem;
     color-scheme: dark;
   }
   body {
